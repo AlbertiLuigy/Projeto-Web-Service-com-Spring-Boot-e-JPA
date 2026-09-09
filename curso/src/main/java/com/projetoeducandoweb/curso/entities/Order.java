@@ -3,6 +3,9 @@ package com.projetoeducandoweb.curso.entities;
 import java.io.Serializable;
 import java.time.Instant;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.projetoeducandoweb.curso.entities.enums.OrderStaus;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +23,11 @@ public class Order implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant moment;
+
+    private Integer orderStaus;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
@@ -30,9 +37,10 @@ public class Order implements Serializable {
 
     }
 
-    public Order(Long id, Instant moment, User client){
+    public Order(Long id, Instant moment, OrderStaus orderStaus, User client) {
         this.id = id;
         this.moment = moment;
+        setOrderStaus(orderStaus); //função que converte o enum para Integer
         this.client = client;
     }
 
@@ -50,6 +58,15 @@ public class Order implements Serializable {
 
     public void setMoment(Instant moment) {
         this.moment = moment;
+    }
+
+    public OrderStaus getOrderStaus() {
+        return OrderStaus.valueOf(orderStaus); //função que converte o Integer para enum
+    }
+
+    public void setOrderStaus(OrderStaus orderStaus) {
+        if(orderStaus != null){
+        this.orderStaus = orderStaus.getCode();} //função que converte o enum para Integer
     }
 
     public User getClient() {
