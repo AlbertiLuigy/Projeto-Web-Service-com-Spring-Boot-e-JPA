@@ -30,7 +30,7 @@ public class User implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "client")
-    private List<Order> orders = new ArrayList<>();
+    private List<Order> orders = new ArrayList<>(); 
 
     public User() {
     }

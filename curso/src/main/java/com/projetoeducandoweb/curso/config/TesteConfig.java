@@ -11,10 +11,12 @@ import org.springframework.context.annotation.Profile;
 
 import com.projetoeducandoweb.curso.entities.Category;
 import com.projetoeducandoweb.curso.entities.Order;
+import com.projetoeducandoweb.curso.entities.Product;
 import com.projetoeducandoweb.curso.entities.User;
 import com.projetoeducandoweb.curso.entities.enums.OrderStaus;
 import com.projetoeducandoweb.curso.repositories.CategoryRepository;
 import com.projetoeducandoweb.curso.repositories.OrderRepository;
+import com.projetoeducandoweb.curso.repositories.ProductRepository;
 import com.projetoeducandoweb.curso.repositories.UserRepository;
 
 @Configuration
@@ -27,9 +29,17 @@ public class TesteConfig implements CommandLineRunner {
     private OrderRepository orderRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
     @Override
     public void run(String... args) throws Exception {
+
+        Product pdc1 = new Product(null, "The Lord of the Rings", "Lorem ipsum dolor sit amet, consectetur.", 90.5, "");
+        Product pdc2 = new Product(null, "Smart TV", "Nulla eu imperdiet purus. Maecenas ante.", 2190.0, "");
+        Product pdc3 = new Product(null, "Macbook Pro", "Nam eleifend maximus tortor, at mollis.", 1250.0, "");
+
+        productRepository.saveAll(Arrays.asList(pdc1, pdc2, pdc3));
 
         Category cat1 = new Category(null, "Electronics");
         Category cat2 = new Category(null, "Books");

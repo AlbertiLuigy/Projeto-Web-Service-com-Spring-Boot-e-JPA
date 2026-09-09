@@ -29,12 +29,11 @@ public class Order implements Serializable {
 
     private Integer orderStaus;
 
-    @ManyToOne
+    @ManyToOne //Um pedido tem um cliente, mas um cliente pode ter vários pedidos
     @JoinColumn(name = "client_id")
     private User client;
     
     public Order(){
-
     }
 
     public Order(Long id, Instant moment, OrderStaus orderStaus, User client) {
