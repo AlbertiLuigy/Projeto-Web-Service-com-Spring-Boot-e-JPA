@@ -3,14 +3,17 @@ package com.projetoeducandoweb.curso.config;
 import java.time.Instant;
 import java.util.Arrays;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.projetoeducandoweb.curso.entities.Category;
 import com.projetoeducandoweb.curso.entities.Order;
 import com.projetoeducandoweb.curso.entities.User;
 import com.projetoeducandoweb.curso.entities.enums.OrderStaus;
+import com.projetoeducandoweb.curso.repositories.CategoryRepository;
 import com.projetoeducandoweb.curso.repositories.OrderRepository;
 import com.projetoeducandoweb.curso.repositories.UserRepository;
 
@@ -22,9 +25,18 @@ public class TesteConfig implements CommandLineRunner {
     private UserRepository userRepository;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Override
     public void run(String... args) throws Exception {
+
+        Category cat1 = new Category(null, "Electronics");
+        Category cat2 = new Category(null, "Books");
+        Category cat3 = new Category(null, "Computers");
+
+        categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
+
         User u1 = new User(null, "Maria", "maria@example.com", "987654321", "123456");
         User u2 = new User(null, "João", "joao@example.com", "987654321", "123456");
         

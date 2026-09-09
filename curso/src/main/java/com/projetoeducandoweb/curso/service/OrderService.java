@@ -10,9 +10,9 @@ import com.projetoeducandoweb.curso.entities.Order;
 import com.projetoeducandoweb.curso.repositories.OrderRepository;
 
 @Service
-public class OrderService {
+public class OrderService { //
 
-    @Autowired // Injeção de dependência
+    @Autowired //Injeção de dependência 
     // Injetando o objeto OrderRepository na variável repository
     private OrderRepository repository;
     
@@ -24,6 +24,4 @@ public class OrderService {
         Optional<Order> obj = repository.findById(id); // Retornando o pedido pelo ID
         return obj.get(); // Retornando o pedido
     }
-
-    
 }
