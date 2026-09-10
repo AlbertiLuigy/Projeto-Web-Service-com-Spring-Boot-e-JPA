@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -34,6 +37,10 @@ public class Product implements Serializable {
     inverseJoinColumns = @JoinColumn (name = "category_id")) //criando a tabela de associação entre produto e categoria, com as chaves estrangeiras product_id e category_id
     private Set<Category> categories = new HashSet<>(); //fazendo a associação entre produto e categoria, um produto pode ter várias categorias
 
+    @OneToMany(mappedBy = "id.product") //um produto pode ter vários itens de pedido, mas um item de pedido pertence a um produto
+    private Set<OrderItem> items = new HashSet<>(); //fazendo a associação entre produto e item de pedido, um produto pode ter vários itens de pedido
+    
+    
     public Product() {
     }
 
@@ -87,6 +94,15 @@ public class Product implements Serializable {
 
     public Set<Category> getCategories() {
         return categories;
+    }
+    
+    @JsonIgnore //para não entrar em loop infinito, pois o produto tem uma lista de pedidos e o pedido tem uma lista de produtos
+    public Set<Order> getOrders() { //retorna os pedidos que contém o produto
+        Set<Order> set = new HashSet<>();
+        for (OrderItem x : items) {
+            set.add(x.getOrder());
+        }
+        return set;
     }
 
     @Override
