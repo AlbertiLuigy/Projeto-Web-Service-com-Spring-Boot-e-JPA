@@ -11,10 +11,12 @@ import org.springframework.context.annotation.Profile;
 
 import com.projetoeducandoweb.curso.entities.Category;
 import com.projetoeducandoweb.curso.entities.Order;
+import com.projetoeducandoweb.curso.entities.OrderItem;
 import com.projetoeducandoweb.curso.entities.Product;
 import com.projetoeducandoweb.curso.entities.User;
 import com.projetoeducandoweb.curso.entities.enums.OrderStaus;
 import com.projetoeducandoweb.curso.repositories.CategoryRepository;
+import com.projetoeducandoweb.curso.repositories.OrderItemRepository;
 import com.projetoeducandoweb.curso.repositories.OrderRepository;
 import com.projetoeducandoweb.curso.repositories.ProductRepository;
 import com.projetoeducandoweb.curso.repositories.UserRepository;
@@ -31,6 +33,8 @@ public class TesteConfig implements CommandLineRunner {
     private CategoryRepository categoryRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -65,6 +69,13 @@ public class TesteConfig implements CommandLineRunner {
         Order o3 = new Order(null, Instant.parse("2023-01-03T00:00:00Z"), OrderStaus.SHIPPED, u1);
 
         orderRepository.saveAll(Arrays.asList(o1, o2, o3));
+
+        OrderItem oi1 = new OrderItem(o1, pdc1, 2, pdc1.getPrice());
+        OrderItem oi2 = new OrderItem(o1, pdc3, 1, pdc3.getPrice());
+        OrderItem oi3 = new OrderItem(o2, pdc3, 2, pdc3.getPrice());
+        OrderItem oi4 = new OrderItem(o3, pdc2, 1, pdc2.getPrice());
+
+        orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
     }
 
 }
