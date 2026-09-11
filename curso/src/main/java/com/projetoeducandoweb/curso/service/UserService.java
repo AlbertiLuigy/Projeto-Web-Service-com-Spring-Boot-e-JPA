@@ -45,10 +45,10 @@ public class UserService {
     }
 
     public User update(Long id, User obj){ //Método para atualizar um usuário pelo ID
-        User entity = repository.getReferenceById(id); // Retornando o usuário pelo ID
+        User entity = repository.findById(id).orElseThrow(()-> new ResourceNotFoundException(id)); // Retornando o usuário pelo ID, ou lança exceção se não existir
         updateData(entity, obj); // Chamando o método updateData para atualizar os dados do usuário
-                return repository.save(entity); // Retornando o usuário atualizado
-            }
+        return repository.save(entity); // Retornando o usuário atualizado
+    }
         
     private void updateData(User entity, User obj) {
         entity.setName(obj.getName()); // Atualizando o nome do usuário
