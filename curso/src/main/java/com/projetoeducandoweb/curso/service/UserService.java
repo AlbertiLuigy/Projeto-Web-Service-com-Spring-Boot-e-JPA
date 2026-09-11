@@ -13,6 +13,8 @@ import com.projetoeducandoweb.curso.repositories.UserRepository;
 import com.projetoeducandoweb.curso.service.exceptions.DatabaseExceptions;
 import com.projetoeducandoweb.curso.service.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class UserService {
 
@@ -45,10 +47,14 @@ public class UserService {
     }
 
     public User update(Long id, User obj){ //Método para atualizar um usuário pelo ID
-        User entity = repository.getReferenceById(id); // Retornando o usuário pelo ID
-        updateData(entity, obj); // Chamando o método updateData para atualizar os dados do usuário
-                return repository.save(entity); // Retornando o usuário atualizado
-            }
+        try{
+            User entity = repository.getReferenceById(id); // Retornando o usuário pelo ID
+            updateData(entity, obj); // Chamando o método updateData para atualizar os dados do usuário
+            return repository.save(entity); // Retornando o usuário atualizado
+        }catch(EntityNotFoundException e){
+            throw new ResourceNotFoundException(id); // Lançando uma exceção caso o usuário não seja encontrado
+        }
+    }
         
     private void updateData(User entity, User obj) {
         entity.setName(obj.getName()); // Atualizando o nome do usuário
