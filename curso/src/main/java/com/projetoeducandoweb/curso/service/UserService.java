@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.projetoeducandoweb.curso.entities.User;
 import com.projetoeducandoweb.curso.repositories.UserRepository;
+import com.projetoeducandoweb.curso.service.exceptions.DatabaseExceptions;
 import com.projetoeducandoweb.curso.service.exceptions.ResourceNotFoundException;
 
 @Service
@@ -39,7 +40,7 @@ public class UserService {
         }catch(EmptyResultDataAccessException e){
             throw new ResourceNotFoundException(id); // Lançando uma exceção caso o usuário não seja encontrado
         }catch(DataIntegrityViolationException e){
-            throw new RuntimeException(e.getMessage()); // Lançando uma exceção caso o usuário não possa ser deletado
+            throw new DatabaseExceptions(e.getMessage()); // Lançando uma exceção caso o usuário não possa ser deletado
         }
     }
 
