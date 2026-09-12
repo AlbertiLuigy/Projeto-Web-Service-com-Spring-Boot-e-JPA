@@ -17,17 +17,17 @@ import com.projetoeducandoweb.curso.service.ProductService;
 public class ProductResources {
     
     @Autowired
-    private ProductService productServiceService; // Injetando o objeto ProductService na variável productServiceService
+    private ProductService productService;
     
     @GetMapping
-    public ResponseEntity<List<Product>> findAll(){ // Método para buscar todos os produtos
-        List<Product> list = productServiceService.findAll(); // Chamando o método findAll do serviço productServiceService
-        return ResponseEntity.ok().body(list); // Retornando todos os produtos
+    public ResponseEntity<List<Product>> findAll(){
+        List<Product> list = productService.findAll();
+        return ResponseEntity.ok().body(list);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Product> findById(@PathVariable Long id){ // Método para buscar um produto pelo ID
-        Product obj = productServiceService.findById(id); // Chamando o método findById do serviço com o ID do produto
-        return ResponseEntity.ok().body(obj); // Retornando o produto
+    public ResponseEntity<Product> findById(@PathVariable Long id){
+        Product obj = productService.findById(id);
+        return ResponseEntity.ok().body(obj);
     }
 }

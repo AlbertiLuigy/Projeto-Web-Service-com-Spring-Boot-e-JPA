@@ -15,7 +15,7 @@ import com.projetoeducandoweb.curso.entities.OrderItem;
 import com.projetoeducandoweb.curso.entities.Payment;
 import com.projetoeducandoweb.curso.entities.Product;
 import com.projetoeducandoweb.curso.entities.User;
-import com.projetoeducandoweb.curso.entities.enums.OrderStaus;
+import com.projetoeducandoweb.curso.entities.enums.OrderStatus;
 import com.projetoeducandoweb.curso.repositories.CategoryRepository;
 import com.projetoeducandoweb.curso.repositories.OrderItemRepository;
 import com.projetoeducandoweb.curso.repositories.OrderRepository;
@@ -65,9 +65,9 @@ public class TesteConfig implements CommandLineRunner {
         
         userRepository.saveAll(Arrays.asList(u1, u2));
 
-        Order o1 = new Order(null, Instant.parse("2023-01-01T00:00:00Z"), OrderStaus.PAID, u1);
-        Order o2 = new Order(null, Instant.parse("2023-01-02T00:00:00Z"), OrderStaus.CANCELED, u2);
-        Order o3 = new Order(null, Instant.parse("2023-01-03T00:00:00Z"), OrderStaus.SHIPPED, u1);
+        Order o1 = new Order(null, Instant.parse("2023-01-01T00:00:00Z"), OrderStatus.PAID, u1);
+        Order o2 = new Order(null, Instant.parse("2023-01-02T00:00:00Z"), OrderStatus.CANCELED, u2);
+        Order o3 = new Order(null, Instant.parse("2023-01-03T00:00:00Z"), OrderStatus.SHIPPED, u1);
 
         orderRepository.saveAll(Arrays.asList(o1, o2, o3));
 

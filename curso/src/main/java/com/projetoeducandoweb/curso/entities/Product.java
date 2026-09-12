@@ -26,7 +26,7 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    private String nome;
+    private String name;
     private String description;
     private Double price;
     private String imgUrl;
@@ -34,19 +34,19 @@ public class Product implements Serializable {
     @ManyToMany 
     @JoinTable(name = "tb_product_category", 
     joinColumns = @JoinColumn (name = "product_id"), 
-    inverseJoinColumns = @JoinColumn (name = "category_id")) //criando a tabela de associação entre produto e categoria, com as chaves estrangeiras product_id e category_id
-    private Set<Category> categories = new HashSet<>(); //fazendo a associação entre produto e categoria, um produto pode ter várias categorias
+    inverseJoinColumns = @JoinColumn (name = "category_id"))
+    private Set<Category> categories = new HashSet<>();
 
-    @OneToMany(mappedBy = "id.product") //um produto pode ter vários itens de pedido, mas um item de pedido pertence a um produto
-    private Set<OrderItem> items = new HashSet<>(); //fazendo a associação entre produto e item de pedido, um produto pode ter vários itens de pedido
+    @OneToMany(mappedBy = "id.product")
+    private Set<OrderItem> items = new HashSet<>();
     
     
     public Product() {
     }
 
-    public Product(Long id, String nome, String description, Double price, String imgUrl) {
+    public Product(Long id, String name, String description, Double price, String imgUrl) {
         this.id = id;
-        this.nome = nome;
+        this.name = name;
         this.description = description;
         this.price = price;
         this.imgUrl = imgUrl;
@@ -60,12 +60,12 @@ public class Product implements Serializable {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -96,8 +96,8 @@ public class Product implements Serializable {
         return categories;
     }
     
-    @JsonIgnore //para não entrar em loop infinito, pois o produto tem uma lista de pedidos e o pedido tem uma lista de produtos
-    public Set<Order> getOrders() { //retorna os pedidos que contém o produto
+    @JsonIgnore
+    public Set<Order> getOrders() {
         Set<Order> set = new HashSet<>();
         for (OrderItem x : items) {
             set.add(x.getOrder());

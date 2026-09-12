@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.projetoeducandoweb.curso.entities.enums.OrderStaus;
+import com.projetoeducandoweb.curso.entities.enums.OrderStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -32,25 +32,25 @@ public class Order implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant moment;
 
-    private Integer orderStaus;
+    private Integer orderStatus;
 
-    @ManyToOne //Um pedido tem um cliente, mas um cliente pode ter vários pedidos
+    @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
     
-    @OneToMany(mappedBy = "id.order") //Um pedido tem vários itens, mas um item pertence a um pedido
+    @OneToMany(mappedBy = "id.order")
     private Set<OrderItem> items = new HashSet<>();
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL) //Um pedido tem um pagamento, mas um pagamento pertence a um pedido
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Payment payment;
 
     public Order(){
     }
 
-    public Order(Long id, Instant moment, OrderStaus orderStaus, User client) {
+    public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
         this.id = id;
         this.moment = moment;
-        setOrderStaus(orderStaus); //função que converte o enum para Integer
+        setOrderStatus(orderStatus);
         this.client = client;
     }
 
@@ -70,13 +70,13 @@ public class Order implements Serializable {
         this.moment = moment;
     }
 
-    public OrderStaus getOrderStaus() {
-        return OrderStaus.valueOf(orderStaus); //função que converte o Integer para enum
+    public OrderStatus getOrderStatus() {
+        return OrderStatus.valueOf(orderStatus);
     }
 
-    public void setOrderStaus(OrderStaus orderStaus) {
-        if(orderStaus != null){
-        this.orderStaus = orderStaus.getCode();} //função que converte o enum para Integer
+    public void setOrderStatus(OrderStatus orderStatus) {
+        if(orderStatus != null){
+        this.orderStatus = orderStatus.getCode();}
     }
 
     public User getClient() {
@@ -101,7 +101,7 @@ public class Order implements Serializable {
 
     public Double getTotal(){
         double sum = 0.0;
-        for(OrderItem x : items){ //acessa a lista de itens do pedido e soma o subtotal de cada item
+        for(OrderItem x : items){
             sum += x.getSubTotal();
         }
         return sum;
