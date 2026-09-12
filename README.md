@@ -30,22 +30,22 @@ O sistema gerencia **Usuários**, **Pedidos**, **Itens de Pedido**, **Produtos**
 | `DELETE`    | `/users/{id}` | Remove um usuário                           | `404 Not Found` + `400 Bad Request` (integridade) |
 
 ### Categorias (`/categories`)
-| Método HTTP | Endpoint           | Descrição                |
-| :---------- | :----------------- | :----------------------- |
-| `GET`       | `/categories`      | Lista todas as categorias|
-| `GET`       | `/categories/{id}` | Busca categoria por ID   |
+| Método HTTP | Endpoint           | Descrição                 | Tratamento de erro       |
+| :---------- | :----------------- | :------------------------ | :----------------------- |
+| `GET`       | `/categories`      | Lista todas as categorias | —                        |
+| `GET`       | `/categories/{id}` | Busca categoria por ID    | `404 Not Found`          |
 
 ### Produtos (`/products`)
-| Método HTTP | Endpoint          | Descrição                |
-| :---------- | :---------------- | :----------------------- |
-| `GET`       | `/products`       | Lista todos os produtos  |
-| `GET`       | `/products/{id}`  | Busca produto por ID     |
+| Método HTTP | Endpoint          | Descrição                | Tratamento de erro       |
+| :---------- | :---------------- | :----------------------- | :----------------------- |
+| `GET`       | `/products`       | Lista todos os produtos  | —                        |
+| `GET`       | `/products/{id}`  | Busca produto por ID     | `404 Not Found`          |
 
 ### Pedidos (`/orders`)
-| Método HTTP | Endpoint        | Descrição                 |
-| :---------- | :-------------- | :------------------------ |
-| `GET`       | `/orders`       | Lista todos os pedidos    |
-| `GET`       | `/orders/{id}`  | Busca pedido por ID (com itens, total e pagamento) |
+| Método HTTP | Endpoint        | Descrição                                            | Tratamento de erro       |
+| :---------- | :-------------- | :--------------------------------------------------- | :----------------------- |
+| `GET`       | `/orders`       | Lista todos os pedidos                               | —                        |
+| `GET`       | `/orders/{id}`  | Busca pedido por ID (com itens, total e pagamento)  | `404 Not Found`          |
 
 ---
 
@@ -233,29 +233,33 @@ GET /users/999  →  HTTP 404
 ## 🔍 Estado atual do projeto e pontos de melhoria
 
 ### ✅ O que está concluído e funcionando
-- [x] Todas as 6 entidades modeladas com relacionamentos JPA corretos
+- [x] Todas as 6 entidades modeladas com relacionamentos JPA corretos (incluindo @EmbeddedId em OrderItem e @MapsId em Payment)
 - [x] 5 Repositories Spring Data JPA funcionando
-- [x] Perfil `teste` (`application-teste.properties`) + `TesteConfig` populando o H2
-- [x] Console H2 habilitado e acessível
+- [x] Perfil `teste` (`application-teste.properties`) + `TesteConfig` populando o H2 com seed de produtos, categorias, usuários, pedidos, itens e pagamentos
+- [x] Console H2 habilitado e acessível em `/h2-console`
 - [x] **User CRUD completo** (findAll, findById, insert, update, delete) com tratamento de exceção 404/400
-- [x] **Tratamento global de exceções** (`ResourceExceptionHandler`) com payload `StandardError` formatado em JSON
-- [x] Order, Category, Product com operações de leitura (GET findAll/findById)
+- [x] **Tratamento global de exceções** (`ResourceExceptionHandler` com `@ControllerAdvice`) + payload `StandardError` em JSON
+- [x] **Tratamento 404 uniforme em TODOS os findById**: UserService, CategoryService, ProductService e OrderService agora usam `.orElseThrow(ResourceNotFoundException)` (nunca mais erro 500 por ID inexistente)
+- [x] **User.update() corrigido**: usa `findById().orElseThrow()` ao invés de `getReferenceById()` com proxy lazy (evita erro 500 por exceção lançada fora do try/catch)
+- [x] Order, Category, Product com operações de leitura (GET findAll/findById) e tratamento de erro 404
 - [x] Cálculo automático do total do pedido (método `Order.getTotal()`)
 - [x] Subtotal do item (método `OrderItem.getSubTotal()`)
-- [x] Enum `OrderStatus` com code int + método `valueOf(int)` customizado
+- [x] Enum `OrderStatus` (corrigido de OrderStaus) com code int + método `valueOf(int)` customizado e proteção contra null
+- [x] Correção de nomenclatura: `Product.name` (antes `nome` em pt-BR), `Order.orderStatus` (antes `orderStaus`), variável `productService` (antes `productServiceService`)
+- [x] Correção de tipagem: entidades com atributos `Long` (wrapper) ao invés de `long` (primitivo) nos IDs, aceitando null no construtor (padrão JPA com auto-incremento)
 
 ### 🚧 O que pode ser implementado como próximos passos (não obrigatórios para o curso)
-- [ ] **CRUD completo** para `Category`, `Product`, `Order` (hoje só têm GET)
-- [ ] **Tratamento de exceção 404** no `findById()` de `CategoryService`, `ProductService`, `OrderService` (atualmente usam `.get()` direto, retornam 500 se o ID não existir)
-- [ ] **Validação de campos** via Bean Validation (`jakarta.validation`) — ex: @NotBlank no nome/email, @Email no email
+- [ ] **CRUD completo** para `Category`, `Product`, `Order` (hoje só têm GET - endpoints create/update/delete)
+- [ ] **Tratamento de exceção 400** no POST/PUT de Category/Product/Order quando o payload for inválido
+- [ ] **Validação de campos** via Bean Validation (`jakarta.validation`) — ex: @NotBlank no nome/email, @Email no email, @DecimalMin no preço
 - [ ] **DTO (Data Transfer Object)** para requests/responses — evitar expor entidades JPA diretamente na API (ex: ocultar password do User)
 - [ ] **Soft delete** no User (campo `deleted` booleano) ao invés de DELETE físico
 - [ ] **Paginação** dos endpoints `findAll()` (`Pageable` do Spring Data)
 - [ ] **Perfil `prod`** com PostgreSQL (já tem o driver no pom, faltaria só criar `application-prod.properties`)
 - [ ] **Testes unitários** (JUnit 5 + Mockito) para a camada Service
+- [ ] **Testes de integração** com @SpringBootTest nos endpoints REST
 - [ ] **Spring Security** para autenticação/autorização (JWT) e criptografia de senha (BCrypt)
 - [ ] Documentação da API com **SpringDoc OpenAPI / Swagger** (`/swagger-ui.html`)
-- [ ] Correção do `@JsonFormat` duplicado no Order (já tem import, mas Instant está correto)
 
 ---
 
